@@ -1,6 +1,7 @@
 
 package com.quitqecom.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,41 @@ public class ProductServiceImpl implements ProductService {
 
 			topLevel = categoryRepository.save(topLevelCategory);
 		}
+		Category secondLevel = categoryRepository.findByNameAndParent(req.getSecondLevelCategory(), topLevel.getName());
+		if (secondLevel != null) {
+			Category secondLevelCategory = new Category();
+			secondLevelCategory.setName(req.getSecondLevelCategory());
+			secondLevelCategory.setLevel(2);
+			secondLevelCategory.setParentCategory(topLevel);
+
+			secondLevel = categoryRepository.save(secondLevelCategory);
+		}
+
+		Category thirdLevel = categoryRepository.findByNameAndParent(req.getThirdLevelCategory(),
+				secondLevel.getName());
+		if (thirdLevel != null) {
+			Category thirdLevelCategory = new Category();
+			thirdLevelCategory.setName(req.getThirdLevelCategory());
+			thirdLevelCategory.setLevel(3);
+			thirdLevelCategory.setParentCategory(secondLevel);
+
+			thirdLevel = categoryRepository.save(thirdLevelCategory);
+		}
+
+		Product product = new Product();
+		product.setTitle(req.getTitle());
+		product.setColor(req.getColor());
+		product.setDescription(req.getDescription());
+		product.setDiscountedPrice(req.getDiscountedPrice());
+		product.setDiscountPercentage(req.getDiscountPercentage());
+		product.setImageUrl(req.getImageUrl());
+		product.setBrand(req.getBrand());
+		product.setPrice(req.getPrice());
+		product.setSizes(req.getSize());
+		product.setQuantity(req.getQuantity());
+		product.setCategory(thirdLevel);
+		product.setCreatedAt(LocalDateTime.now());
+
 		return null;
 	}
 
