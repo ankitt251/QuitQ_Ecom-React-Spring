@@ -1,40 +1,46 @@
 package com.quitqecom.service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.quitqecom.config.JwtProvider;
+import com.quitqecom.exception.UserException;
 import com.quitqecom.model.User;
 import com.quitqecom.repository.UserRepository;
 
 @Service
-public class UserServiceImpl implements UserDetailsService {
+public class UserServiceImpl implements UserService {
 
+	@Autowired
 	private UserRepository userRepository;
 
 	@Autowired
-	public UserServiceImpl(UserRepository userRepository) {
-		this.userRepository = userRepository;
+	private JwtProvider jwtProvider;
+
+	@Override
+	public User findUserById(Long userId) throws UserException {
+
+		Optional<User> user = userRepository.findById(userId);
+
+		if (user.isPresent()) {
+			return user.get();
+		}
+		throw new UserException("User not found with id-" + userId);
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public User findUserProfileByJwt(String jwt) throws UserException {
+		String email = jwtProvider.getEmailFromToken(jwt);
 
-		User user = userRepository.findByEmail(username);
-		if (user == null) {
-			throw new UsernameNotFoundException("User not found with email- " + username);
+		User user = userRepository.findByEmail(email);
+
+		if (user != null) {
+			return user;
 		}
 
-		List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-
-		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
-				grantedAuthorities);
+		throw new UserException("User not found with email-" + email);
 	}
 
 }

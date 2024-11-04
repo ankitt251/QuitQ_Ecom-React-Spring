@@ -21,7 +21,7 @@ import com.quitqecom.model.User;
 import com.quitqecom.repository.UserRepository;
 import com.quitqecom.request.LoginRequest;
 import com.quitqecom.response.AuthResponse;
-import com.quitqecom.service.UserServiceImpl;
+import com.quitqecom.service.CustomUserServiceImpl;
 
 @RestController
 @RequestMapping("/auth")
@@ -33,9 +33,9 @@ public class AuthController {
 
 	private PasswordEncoder passwordEncoder;
 
-	private UserServiceImpl userServiceImpl;
+	private CustomUserServiceImpl userServiceImpl;
 
-	public AuthController(UserRepository userRepository, UserServiceImpl userServiceImpl,
+	public AuthController(UserRepository userRepository, CustomUserServiceImpl userServiceImpl,
 			PasswordEncoder passwordEncoder, JwtProvider jwtProvider) {
 		this.userServiceImpl = userServiceImpl;
 		this.userRepository = userRepository;
