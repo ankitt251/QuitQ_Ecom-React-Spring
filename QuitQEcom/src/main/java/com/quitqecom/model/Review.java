@@ -1,9 +1,12 @@
 package com.quitqecom.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,7 +27,15 @@ public class Review {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String review;
+	@Column(name = "review_text", nullable = false)
+	private String reviewText;
+
+	@Column(name = "rating")
+	private double rating;
+
+	@Column(name = "product_images")
+	@ElementCollection
+	private List<String> productImages;
 
 	@ManyToOne
 	@JoinColumn(name = "product_id")
@@ -32,7 +43,8 @@ public class Review {
 	private Product product;
 
 	@ManyToOne
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "user_id", nullable = false)
+
 	@JsonIgnore
 	private User user;
 

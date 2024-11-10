@@ -20,6 +20,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+//@Pattern(regexp = "^[0-9]{5}$", message = "Employee postal code must be a 5-digit number.")
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -30,9 +32,7 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	private String firstName;
-
-	private String lastName;
+	private String fullName;
 
 	private String username;
 
@@ -40,7 +40,7 @@ public class User {
 
 	private String password;
 
-	private String role;
+	private USER_ROLE role = USER_ROLE.CUSTOMER;
 
 	private String mobile;
 

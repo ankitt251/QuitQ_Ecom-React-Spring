@@ -1,5 +1,6 @@
 package com.quitqecom.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,6 +28,10 @@ public class Category {
 	@NotNull
 	@Size(max = 50)
 	private String name;
+
+	@NotNull
+	@Column(name = "category_id", unique = true)
+	private String categoryId;
 
 	@ManyToOne
 	@JoinColumn(name = "parent_category_id")

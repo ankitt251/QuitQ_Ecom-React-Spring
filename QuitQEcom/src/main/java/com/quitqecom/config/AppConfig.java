@@ -3,6 +3,7 @@ package com.quitqecom.config;
 import java.util.Arrays;
 import java.util.Collections;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,14 +18,18 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 public class AppConfig {
+	@Autowired
+	private CustomAuthenticationSuccessHandler customSuccessHandler;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.authorizeHttpRequests(authz -> authz.requestMatchers("/auth/signup", "/auth/signin").permitAll()
-						.anyRequest().authenticated())
+				.authorizeHttpRequests(authz -> authz.requestMatchers("/auth/**").permitAll().anyRequest().permitAll())
 				.addFilterBefore(new JwtValidator(), BasicAuthenticationFilter.class).csrf(csrf -> csrf.disable())
-				.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+				.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+				// .formLogin(login -> login.successHandler(customSuccessHandler)) // Set custom
+				// success handler
+				.logout(logout -> logout.logoutUrl("/auth/logout").permitAll());
 
 		return http.build();
 	}

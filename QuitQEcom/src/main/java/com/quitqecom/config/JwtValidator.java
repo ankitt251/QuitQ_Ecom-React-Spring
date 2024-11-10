@@ -23,6 +23,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class JwtValidator extends OncePerRequestFilter {
 
+	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 
@@ -35,21 +36,16 @@ public class JwtValidator extends OncePerRequestFilter {
 				Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
 
 				String email = String.valueOf(claims.get("email"));
+				String roles = String.valueOf(claims.get("roles"));
 
-				String authorities = String.valueOf(claims.get("authorities"));
-
-				List<GrantedAuthority> auths = AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
-
-				Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, auths);
-
+				List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList(roles);
+				Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, authorities);
 				SecurityContextHolder.getContext().setAuthentication(authentication);
 
 			} catch (Exception e) {
 				throw new BadCredentialsException("Invalid token...from jwt validator");
 			}
-
 		}
 		filterChain.doFilter(request, response);
 	}
-
 }

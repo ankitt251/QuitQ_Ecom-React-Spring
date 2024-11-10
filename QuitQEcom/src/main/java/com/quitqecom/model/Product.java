@@ -35,12 +35,12 @@ public class Product {
 
 	private String description;
 
-	private int price;
+	private int mrpPrice;
 
-	@Column(name = "discounted_price")
-	private int discountedPrice;
+	@Column(name = "selling_price")
+	private int sellingPrice;
 
-	@Column(name = "discount_present")
+	@Column(name = "discount_percentage")
 	private int discountPercentage;
 
 	private int quantity;
@@ -48,6 +48,9 @@ public class Product {
 	private String brand;
 
 	private String color;
+
+	@ManyToOne
+	private Seller seller;
 
 	@Embedded
 	@ElementCollection
