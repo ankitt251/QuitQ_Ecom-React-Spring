@@ -27,13 +27,12 @@ public class Review {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "review_text", nullable = false)
+	@Column(nullable = false)
 	private String reviewText;
 
-	@Column(name = "rating")
+	@Column(nullable = false)
 	private double rating;
 
-	@Column(name = "product_images")
 	@ElementCollection
 	private List<String> productImages;
 
@@ -44,7 +43,6 @@ public class Review {
 
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)
-
 	@JsonIgnore
 	private User user;
 

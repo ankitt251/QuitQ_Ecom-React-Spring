@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.quitqecom.model.AccountStatus;
+import com.quitqecom.enums.AccountStatus;
 import com.quitqecom.model.Seller;
 
 public interface SellerRepository extends JpaRepository<Seller, Long> {

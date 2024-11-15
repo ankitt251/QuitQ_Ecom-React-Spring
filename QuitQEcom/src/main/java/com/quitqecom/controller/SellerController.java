@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.quitqecom.config.JwtProvider;
+import com.quitqecom.enums.AccountStatus;
 import com.quitqecom.exception.UserException;
-import com.quitqecom.model.AccountStatus;
 import com.quitqecom.model.Seller;
 import com.quitqecom.request.LoginRequest;
 import com.quitqecom.response.AuthResponse;
@@ -78,6 +79,19 @@ public class SellerController {
 			throws UserException {
 		List<Seller> allSellers = sellerService.getAllSellers(status);
 		return new ResponseEntity<>(allSellers, HttpStatus.OK);
+	}
+
+	@PatchMapping
+	public ResponseEntity<Seller> updateSeller(@RequestHeader("Authorization") String jwt, @RequestBody Seller seller)
+			throws UserException {
+		Seller profile = sellerService.getSellerProfile(jwt);
+		Seller updatedSeller = sellerService.updateSeller(profile.getId(), seller);
+		return new ResponseEntity<>(updatedSeller, HttpStatus.OK);
+	}
+
+	public ResponseEntity<Void> deleteSeller(@PathVariable Long id) throws UserException {
+		sellerService.deleteSeller(id);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }

@@ -2,8 +2,8 @@ package com.quitqecom.service;
 
 import java.util.List;
 
+import com.quitqecom.enums.AccountStatus;
 import com.quitqecom.exception.UserException;
-import com.quitqecom.model.AccountStatus;
 import com.quitqecom.model.Seller;
 
 public interface SellerService {
@@ -18,7 +18,7 @@ public interface SellerService {
 
 	List<Seller> getAllSellers(AccountStatus status) throws UserException;
 
-	Seller updateSeller(Seller seller) throws UserException;
+	Seller updateSeller(Long id, Seller seller) throws UserException;
 
 	void deleteSeller(Long id) throws UserException;
 

@@ -25,6 +25,7 @@ public class JwtProvider {
 		String roles = populateAuthorities(authorities);
 
 		String jwt = Jwts.builder().setIssuedAt(new Date()).setExpiration(new Date((new Date()).getTime() + 846000000)) // 10
+																														// //
 																														// days
 				.claim("email", auth.getName()).claim("authorities", roles) // Add roles to claims
 				.signWith(key).compact();

@@ -1,6 +1,6 @@
 package com.quitqecom.response;
 
-import com.quitqecom.model.USER_ROLE;
+import com.quitqecom.enums.USER_ROLE;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

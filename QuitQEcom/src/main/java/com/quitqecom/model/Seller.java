@@ -1,5 +1,8 @@
 package com.quitqecom.model;
 
+import com.quitqecom.enums.AccountStatus;
+import com.quitqecom.enums.USER_ROLE;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;

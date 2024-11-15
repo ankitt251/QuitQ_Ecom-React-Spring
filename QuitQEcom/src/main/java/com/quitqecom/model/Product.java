@@ -2,19 +2,14 @@ package com.quitqecom.model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
@@ -37,10 +32,8 @@ public class Product {
 
 	private int mrpPrice;
 
-	@Column(name = "selling_price")
 	private int sellingPrice;
 
-	@Column(name = "discount_percentage")
 	private int discountPercentage;
 
 	private int quantity;
@@ -52,15 +45,13 @@ public class Product {
 	@ManyToOne
 	private Seller seller;
 
-	@Embedded
-	@ElementCollection
-	private Set<Size> sizes = new HashSet<>();
+	private String sizes;
 
 	@Column(name = "image_url")
-	private String imageUrl;
+	private List<String> imageUrl = new ArrayList<>();
 
-	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Rating> ratings = new ArrayList<>();
+//	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+//	private List<Rating> ratings = new ArrayList<>();
 
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Review> reviews = new ArrayList<>();
@@ -69,7 +60,6 @@ public class Product {
 	private int numRatings;
 
 	@ManyToOne
-	@JoinColumn(name = "category_id")
 	private Category category;
 
 	private LocalDateTime createdAt;

@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.quitqecom.config.JwtProvider;
+import com.quitqecom.enums.USER_ROLE;
 import com.quitqecom.exception.UserException;
-import com.quitqecom.model.USER_ROLE;
 import com.quitqecom.repository.UserRepository;
 import com.quitqecom.request.LoginRequest;
 import com.quitqecom.request.SignUpRequest;
 import com.quitqecom.response.AuthResponse;
 import com.quitqecom.service.AuthService;
-import com.quitqecom.service.CustomUserServiceImpl;
+import com.quitqecom.serviceimpl.CustomUserServiceImpl;
 
 @RestController
 @RequestMapping("/auth")
@@ -52,69 +52,6 @@ public class AuthController {
 		authResponse.setRole(USER_ROLE.CUSTOMER);
 		return ResponseEntity.ok(authResponse);
 	}
-
-//	@PostMapping("/signup")
-//	@Transactional
-//	@ResponseStatus(HttpStatus.CREATED)
-//	public ResponseEntity<AuthResponse> createUserHandler(@RequestBody User user) throws UserException {
-//		try {
-//			String email = user.getEmail();
-//			String username = user.getUsername();
-//			String password = user.getPassword();
-//			String firstName = user.getFirstName();
-//			String lastName = user.getLastName();
-//			// String role = user.getRole();
-//
-//			System.out.println("Received Signup Request: " + email);
-//
-//			// Check if the email already exists
-//			User isEmailExist = userRepository.findByEmail(email);
-//			if (isEmailExist != null) {
-//				System.out.println("User already exists with email: " + email);
-//				throw new UserException("User already exists");
-//			}
-//
-//			// Create and save a new user
-//			User createdUser = new User();
-//			createdUser.setEmail(email);
-//			createdUser.setUsername(username);
-//			createdUser.setPassword(passwordEncoder.encode(password));
-//			createdUser.setFirstName(firstName);
-//			createdUser.setLastName(lastName);
-//			// createdUser.setRole(role);
-//			createdUser.setCreatedAt(LocalDateTime.now());
-//
-//			System.out.println("Attempting to save user to the database.");
-//			User savedUser = userRepository.save(createdUser);
-//			System.out.println("User successfully saved with ID: " + savedUser.getId());
-//
-//			// Set authentication for the new user
-//			Authentication authentication = new UsernamePasswordAuthenticationToken(savedUser.getEmail(),
-//					savedUser.getPassword());
-//			SecurityContextHolder.getContext().setAuthentication(authentication);
-//
-//			// Generate a JWT token
-//			String token = jwtProvider.generateToken(authentication);
-//			System.out.println("JWT Token generated: " + token);
-//
-//			// Return response with status CREATED
-//			AuthResponse authResponse = new AuthResponse();
-//			authResponse.setJwt(token);
-//			authResponse.setMessage("SignUp Success");
-//
-//			return new ResponseEntity<AuthResponse>(authResponse, HttpStatus.CREATED);
-//
-//		} catch (UserException e) {
-//			System.err.println("UserException: " + e.getMessage());
-//			return new ResponseEntity<>(new AuthResponse(null, e.getMessage()), HttpStatus.BAD_REQUEST);
-//
-//		} catch (Exception e) {
-//			e.printStackTrace(); // Print stack trace for any other unexpected errors
-//			System.err.println("Unexpected error occurred during signup.");
-//			return new ResponseEntity<>(new AuthResponse(null, "Signup failed due to an internal error"),
-//					HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-//	}
 
 	@PostMapping("/signin")
 	public ResponseEntity<AuthResponse> loginUserHandler(@RequestBody LoginRequest loginRequest) throws UserException {
