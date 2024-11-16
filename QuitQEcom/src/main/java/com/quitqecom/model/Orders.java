@@ -14,7 +14,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -43,7 +42,7 @@ public class Orders {
 
 	private LocalDateTime deliveryDate = orderDate.plusDays(7);
 
-	@OneToOne
+	@ManyToOne
 	private Address shippingAddress;
 
 	@Embedded

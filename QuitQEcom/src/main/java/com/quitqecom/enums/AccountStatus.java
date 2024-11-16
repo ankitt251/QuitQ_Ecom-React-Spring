@@ -1,5 +1,5 @@
 package com.quitqecom.enums;
 
 public enum AccountStatus {
-	PENDING, ACTIVE, INACTIVE
+	ACTIVE, INACTIVE, SUSPENDED, BANNED, CLOSED, PENDING_VERIFICATION
 }

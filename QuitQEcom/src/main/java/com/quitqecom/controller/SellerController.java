@@ -19,9 +19,11 @@ import com.quitqecom.config.JwtProvider;
 import com.quitqecom.enums.AccountStatus;
 import com.quitqecom.exception.UserException;
 import com.quitqecom.model.Seller;
+import com.quitqecom.model.SellerReport;
 import com.quitqecom.request.LoginRequest;
 import com.quitqecom.response.AuthResponse;
 import com.quitqecom.service.AuthService;
+import com.quitqecom.service.SellerReportService;
 import com.quitqecom.service.SellerService;
 
 @RestController
@@ -36,6 +38,9 @@ public class SellerController {
 
 	@Autowired
 	private JwtProvider jwtProvider;
+
+	@Autowired
+	private SellerReportService sellerReportService;
 
 	@PostMapping("/loginSeller")
 	public ResponseEntity<AuthResponse> loginSeller(@RequestBody LoginRequest req) throws UserException {
@@ -66,13 +71,14 @@ public class SellerController {
 		return new ResponseEntity<>(seller, HttpStatus.OK);
 	}
 
-//	public ResponseEntity<SellerReport> getSellerReport(@RequestHeader("Authorization") String jwt)
-//			throws UserException {
-//		String email = jwtProvider.getEmailFromToken(jwt);
-//		Seller seller = sellerService.getSellerByEmail(email);
-//		SellerReport sellerReport = sellerService.getSellerReport(seller);
-//		return new ResponseEntity<>(sellerReport, HttpStatus.OK);
-//	}
+	@GetMapping("/sellerReport")
+	public ResponseEntity<SellerReport> getSellerReport(@RequestHeader("Authorization") String jwt)
+			throws UserException {
+		String email = jwtProvider.getEmailFromToken(jwt);
+		Seller seller = sellerService.getSellerByEmail(email);
+		SellerReport sellerReport = sellerReportService.getSellerReport(seller);
+		return new ResponseEntity<>(sellerReport, HttpStatus.OK);
+	}
 
 	@GetMapping
 	public ResponseEntity<List<Seller>> getAllSellers(@RequestParam("status") AccountStatus status)

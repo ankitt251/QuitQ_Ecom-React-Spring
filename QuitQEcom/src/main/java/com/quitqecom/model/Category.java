@@ -1,5 +1,7 @@
 package com.quitqecom.model;
 
+import com.quitqecom.enums.CategorySection;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,6 +27,8 @@ public class Category {
 
 	private String name;
 
+	private String image;
+
 	@NotNull
 	@Column(name = "category_id", unique = true)
 	private String categoryId;
@@ -33,4 +37,6 @@ public class Category {
 	private Category parentCategory;
 
 	private Integer level;
+
+	private CategorySection section;
 }

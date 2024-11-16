@@ -42,6 +42,6 @@ public class Seller {
 
 	private USER_ROLE role = USER_ROLE.SELLER;
 
-	private AccountStatus accountStatus = AccountStatus.PENDING;
+	private AccountStatus accountStatus = AccountStatus.ACTIVE;
 
 }

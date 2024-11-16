@@ -6,6 +6,7 @@ import com.quitqecom.enums.OrderStatus;
 import com.quitqecom.exception.OrderException;
 import com.quitqecom.model.Address;
 import com.quitqecom.model.Cart;
+import com.quitqecom.model.OrderItem;
 import com.quitqecom.model.Orders;
 import com.quitqecom.model.User;
 
@@ -23,8 +24,5 @@ public interface OrderService {
 
 	public Orders cancelOrder(Long orderId, User user) throws OrderException;
 
-	public List<Orders> getAllOrders();
-
-	public void deleteOrder(Long orderId) throws OrderException;
-
+	OrderItem getOrderItemById(Long orderId) throws OrderException;
 }

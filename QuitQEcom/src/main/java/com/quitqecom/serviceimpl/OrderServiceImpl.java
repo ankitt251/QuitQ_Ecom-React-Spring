@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.quitqecom.enums.OrderStatus;
 import com.quitqecom.exception.OrderException;
@@ -20,6 +21,7 @@ import com.quitqecom.repository.OrderItemRepository;
 import com.quitqecom.repository.OrderRepository;
 import com.quitqecom.service.OrderService;
 
+@Service
 public class OrderServiceImpl implements OrderService {
 
 	@Autowired
@@ -89,44 +91,43 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public Orders findOrderById(Long orderId) throws OrderException {
-		// TODO Auto-generated method stub
-		return null;
+		return orderRepository.findById(orderId).orElseThrow(() -> new OrderException("Order not found"));
 	}
 
 	@Override
 	public List<Orders> usersOrdersHistory(Long userId) throws OrderException {
-		// TODO Auto-generated method stub
-		return null;
+		return orderRepository.findByUserId(userId);
 	}
 
 	@Override
 	public List<Orders> sellerOrders(Long sellerId) {
-		// TODO Auto-generated method stub
-		return null;
+		return orderRepository.findBySellerId(sellerId);
 	}
 
 	@Override
 	public Orders updateOrderStatus(Long orderId, OrderStatus orderStatus) throws OrderException {
-		// TODO Auto-generated method stub
-		return null;
+		Orders order = findOrderById(orderId);
+		order.setOrderStatus(orderStatus);
+		return orderRepository.save(order);
 	}
 
 	@Override
 	public Orders cancelOrder(Long orderId, User user) throws OrderException {
-		// TODO Auto-generated method stub
-		return null;
+		Orders order = findOrderById(orderId);
+
+		if (user.getId().equals(order.getUser().getId())) {
+			throw new OrderException("You don't have access to this order");
+		}
+
+		order.setOrderStatus(OrderStatus.CANCELLED);
+		return orderRepository.save(order);
+
 	}
 
 	@Override
-	public List<Orders> getAllOrders() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public OrderItem getOrderItemById(Long orderId) throws OrderException {
 
-	@Override
-	public void deleteOrder(Long orderId) throws OrderException {
-		// TODO Auto-generated method stub
-
+		return orderItemRepository.findById(orderId).orElseThrow(() -> new OrderException("Order not found"));
 	}
 
 }

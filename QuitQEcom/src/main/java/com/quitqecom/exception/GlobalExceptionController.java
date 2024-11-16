@@ -32,4 +32,26 @@ public class GlobalExceptionController {
 				request.getDescription(false));
 		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
 	}
+
+	@ExceptionHandler(OrderException.class)
+	public ResponseEntity<ErrorDetails> handleOrderException(OrderException e, WebRequest request) {
+		ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), e.getMessage(),
+				request.getDescription(false));
+		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler(ReviewException.class)
+	public ResponseEntity<ErrorDetails> handleSellerReportException(ReviewException e, WebRequest request) {
+		ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), e.getMessage(),
+				request.getDescription(false));
+		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<ErrorDetails> handleGlobalException(Exception e, WebRequest request) {
+		ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), e.getMessage(),
+				request.getDescription(false));
+		return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
 }
