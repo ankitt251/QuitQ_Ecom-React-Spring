@@ -81,6 +81,8 @@ public class ProductServiceImpl implements ProductService {
 		product.setImageUrl(req.getImageUrl());
 		product.setMrpPrice(req.getMrpPrice());
 		product.setSizes(req.getSizes());
+		product.setQuantity(req.getQuantity());
+		product.setBrand(req.getBrand());
 		product.setDiscountPercentage(discountPercentage);
 
 		return productRepository.save(product);

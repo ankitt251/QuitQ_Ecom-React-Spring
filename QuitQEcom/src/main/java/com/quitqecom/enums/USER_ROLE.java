@@ -2,6 +2,6 @@ package com.quitqecom.enums;
 
 public enum USER_ROLE {
 
-	ADMIN, SELLER, CUSTOMER
+	ROLE_CUSTOMER, ROLE_SELLER, ROLE_ADMIN
 
 }

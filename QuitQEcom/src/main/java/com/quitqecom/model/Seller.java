@@ -40,7 +40,7 @@ public class Seller {
 	@OneToOne(cascade = CascadeType.ALL)
 	private Address pickupAddress = new Address();
 
-	private USER_ROLE role = USER_ROLE.SELLER;
+	private USER_ROLE role = USER_ROLE.ROLE_SELLER;
 
 	private AccountStatus accountStatus = AccountStatus.ACTIVE;
 

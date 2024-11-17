@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,7 +54,7 @@ public class SellerController {
 
 	}
 
-	@PostMapping("/create")
+	@PostMapping("/signup")
 	public ResponseEntity<Seller> createSeller(@RequestBody Seller seller) throws UserException {
 		Seller savedSeller = sellerService.createSeller(seller);
 		return new ResponseEntity<>(savedSeller, HttpStatus.CREATED);
@@ -80,14 +81,14 @@ public class SellerController {
 		return new ResponseEntity<>(sellerReport, HttpStatus.OK);
 	}
 
-	@GetMapping
+	@GetMapping("/getAllSellers")
 	public ResponseEntity<List<Seller>> getAllSellers(@RequestParam("status") AccountStatus status)
 			throws UserException {
-		List<Seller> allSellers = sellerService.getAllSellers(status);
+		List<Seller> allSellers = sellerService.getAllSellersByStatus(status);
 		return new ResponseEntity<>(allSellers, HttpStatus.OK);
 	}
 
-	@PatchMapping
+	@PatchMapping("/updateSeller")
 	public ResponseEntity<Seller> updateSeller(@RequestHeader("Authorization") String jwt, @RequestBody Seller seller)
 			throws UserException {
 		Seller profile = sellerService.getSellerProfile(jwt);
@@ -95,9 +96,10 @@ public class SellerController {
 		return new ResponseEntity<>(updatedSeller, HttpStatus.OK);
 	}
 
-	public ResponseEntity<Void> deleteSeller(@PathVariable Long id) throws UserException {
+	@DeleteMapping("/deleteSeller/{id}")
+	public ResponseEntity<String> deleteSeller(@PathVariable Long id) throws UserException {
 		sellerService.deleteSeller(id);
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>("Seller Deleted", HttpStatus.OK);
 	}
 
 }

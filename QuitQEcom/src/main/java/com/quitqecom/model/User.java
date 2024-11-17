@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.quitqecom.enums.AccountStatus;
 import com.quitqecom.enums.USER_ROLE;
 
 import jakarta.persistence.CascadeType;
@@ -41,9 +42,11 @@ public class User {
 
 	private String password;
 
-	private USER_ROLE role = USER_ROLE.CUSTOMER;
+	private USER_ROLE role = USER_ROLE.ROLE_CUSTOMER;
 
 	private String mobile;
+
+	private AccountStatus accountStatus = AccountStatus.ACTIVE;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Address> address = new ArrayList<>();

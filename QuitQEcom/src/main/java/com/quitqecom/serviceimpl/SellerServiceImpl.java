@@ -52,7 +52,7 @@ public class SellerServiceImpl implements SellerService {
 		newSeller.setPassword(passwordEncoder.encode(seller.getPassword()));
 		newSeller.setSellerName(seller.getSellerName());
 		newSeller.setPickupAddress(saveAddress);
-		newSeller.setRole(USER_ROLE.SELLER);
+		newSeller.setRole(USER_ROLE.ROLE_SELLER);
 		newSeller.setBusinessDetails(seller.getBusinessDetails());
 		newSeller.setMobile(seller.getMobile());
 
@@ -77,7 +77,7 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	@Override
-	public List<Seller> getAllSellers(AccountStatus status) throws UserException {
+	public List<Seller> getAllSellersByStatus(AccountStatus status) throws UserException {
 
 		return sellerRepository.findByAccountStatus(status);
 	}
@@ -130,6 +130,11 @@ public class SellerServiceImpl implements SellerService {
 		Seller seller = getSellerById(sellerId);
 		seller.setAccountStatus(status);
 		return sellerRepository.save(seller);
+	}
+
+	@Override
+	public List<Seller> getAllSellers() {
+		return sellerRepository.findAll();
 	}
 
 }

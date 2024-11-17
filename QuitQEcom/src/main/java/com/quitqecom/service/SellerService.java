@@ -16,7 +16,7 @@ public interface SellerService {
 
 	Seller getSellerById(Long id) throws UserException;
 
-	List<Seller> getAllSellers(AccountStatus status) throws UserException;
+	List<Seller> getAllSellersByStatus(AccountStatus status) throws UserException;
 
 	Seller updateSeller(Long id, Seller seller) throws UserException;
 
@@ -25,5 +25,7 @@ public interface SellerService {
 	// Seller verifyEmail(String email) throws UserException;
 
 	Seller updateSellerAccountStatus(Long sellerId, AccountStatus status) throws UserException;
+
+	List<Seller> getAllSellers();
 
 }

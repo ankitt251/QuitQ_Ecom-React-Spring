@@ -52,8 +52,10 @@ public class AuthServiceImpl implements AuthService {
 		if (user == null) {
 			User createdUser = new User();
 			createdUser.setEmail(req.getEmail());
+			createdUser.setFullName(req.getFullName());
 			createdUser.setUsername(req.getUsername());
-			createdUser.setRole(USER_ROLE.CUSTOMER);
+			createdUser.setRole(USER_ROLE.ROLE_CUSTOMER);
+			createdUser.setMobile(req.getMobile());
 			createdUser.setPassword(passwordEncoder.encode(req.getPassword()));
 
 			createdUser.setCreatedAt(LocalDateTime.now());
@@ -66,7 +68,7 @@ public class AuthServiceImpl implements AuthService {
 		}
 
 		List<GrantedAuthority> authorities = new ArrayList<>();
-		authorities.add(new SimpleGrantedAuthority("ROLE_" + USER_ROLE.CUSTOMER.toString()));
+		authorities.add(new SimpleGrantedAuthority("ROLE_" + USER_ROLE.ROLE_CUSTOMER.toString()));
 
 		Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
 		SecurityContextHolder.getContext().setAuthentication(authentication);

@@ -16,9 +16,18 @@ public class CategoryServiceImpl implements CategoryService {
 	private CategoryRepository categoryRepository;
 
 	@Override
-	public List<Category> createCategory(List<Category> category) {
-		return categoryRepository.saveAll(category);
+	public List<Category> createCategory(List<Category> categories) {
+	    for (Category category : categories) {
+	        if (category.getParentCategory() != null && category.getParentCategory().getId() != null) {
+	            
+	            Category parentCategory = categoryRepository.findById(category.getParentCategory().getId())
+	                    .orElse(null);
+	            category.setParentCategory(parentCategory);
+	        }
+	    }
+	    return categoryRepository.saveAll(categories);
 	}
+
 
 	@Override
 	public Category updateCategory(Category category, Long id) throws Exception {

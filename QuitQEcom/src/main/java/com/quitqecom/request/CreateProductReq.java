@@ -11,6 +11,8 @@ public class CreateProductReq {
 
 	private String description;
 
+	private int quantity;
+
 	private int mrpPrice;
 
 	private int sellingPrice;
@@ -18,6 +20,8 @@ public class CreateProductReq {
 	private int discountPercentage;
 
 	private String color;
+
+	private String brand;
 
 	private List<String> imageUrl;
 
