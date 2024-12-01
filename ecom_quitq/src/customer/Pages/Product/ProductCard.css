@@ -1,0 +1,63 @@
+.card {
+  position: relative;
+  width: 250px;
+  height: 350px;
+  overflow: hidden;
+  padding: 5px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background-color: #f4f5f7;
+}
+
+.card-media {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 75%;
+  transition: transform 0.5s ease-in-out;
+  object-fit: cover;
+}
+
+.center-buttons {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.thin-line-through {
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.favorite-button {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: transparent; /* Keep button background transparent */
+  border: none; /* Remove button border */
+  padding: 0; /* Remove padding */
+}
+
+.custom-button {
+  background-color: white;
+  color: #b88e2f;
+  font-weight: bold;
+}
+
+.favorite-button .favorite-icon {
+  color: transparent; /* Make the heart icon transparent */
+  font-size: 30px; /* Adjust icon size if necessary */
+  border: 2px solid #b88e2f; /* Apply a border to the icon */
+  border-radius: 50%; /* Optional: Make the border rounded around the icon */
+  padding: 5px; /* Add some padding to make the border visible around the heart */
+}
