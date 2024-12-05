@@ -4,6 +4,9 @@ import React from "react";
 const BecomeSellerFormStep3 = ({ formik }) => {
   return (
     <div className="space-y-5">
+      <p className="mt-4 text-xl font-bold text-center pb-5">
+        Business Details
+      </p>
       <TextField
         fullWidth
         name="businessDetails.businessName"

@@ -1,1 +1,86 @@
-export const womenLevelTwo = [{}];
+export const womenLevelTwo = [
+  {
+    parentCategoryId: "women",
+    level: 2,
+    name: "Indian & Fusion Wear",
+    categoryId: "women_indian_fusion_wear",
+  },
+  {
+    parentCategoryId: "women",
+    level: 2,
+    name: "Western Wear",
+    categoryId: "women_western_wear",
+  },
+  {
+    parentCategoryId: "women",
+    level: 2,
+    name: "Footwear",
+    categoryId: "women_footwear",
+  },
+  {
+    parentCategoryId: "women",
+    level: 2,
+    name: "Ethnic Wear",
+    categoryId: "women_ethnic_wear",
+  },
+  {
+    parentCategoryId: "women",
+    level: 2,
+    name: "Bottomwear",
+    categoryId: "women_bottomwear",
+  },
+  {
+    parentCategoryId: "women",
+    level: 2,
+    name: "Innerwear & Sleepwear",
+    categoryId: "women_innerwear_sleepwear",
+  },
+  {
+    parentCategoryId: "women",
+    level: 2,
+    name: "Sportswear",
+    categoryId: "women_sportswear",
+  },
+  {
+    parentCategoryId: "women",
+    level: 2,
+    name: "Winter Wear",
+    categoryId: "women_winter_wear",
+  },
+  {
+    parentCategoryId: "women",
+    level: 2,
+    name: "Party Wear",
+    categoryId: "women_party_wear",
+  },
+  {
+    parentCategoryId: "women",
+    level: 2,
+    name: "Accessories",
+    categoryId: "women_accessories",
+  },
+  {
+    parentCategoryId: "women",
+    level: 2,
+    name: "Jewelry",
+    categoryId: "women_jewelry",
+  },
+  {
+    parentCategoryId: "women",
+    level: 2,
+    name: "Watches",
+    categoryId: "women_watches",
+  },
+  {
+    parentCategoryId: "women",
+    level: 2,
+    name: "Grooming & Personal Care",
+    categoryId: "women_grooming_personal_care",
+  },
+  {
+    parentCategoryId: "women",
+    level: 2,
+    name: "Handbags & Clutches",
+    categoryId: "women_handbags_clutches",
+  },
+];

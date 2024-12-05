@@ -1,16 +1,13 @@
 import React from "react";
-import { menLevelTwo } from "../../../data/category/level two/mainLevelTwo";
+import { Box } from "@mui/material";
+import { menLevelTwo } from "../../../data/category/level two/menLevelTwo";
 import { womenLevelTwo } from "../../../data/category/level two/womenLevelTwo";
 import { electronicsLevelTwo } from "../../../data/category/level two/electronicsLevelTwo";
 import { furnitureLevelTwo } from "../../../data/category/level two/furnitureLevelTwo";
-import { menLevelThree } from "../../../data/category/level three/mainLevelThree";
+import { menLevelThree } from "../../../data/category/level three/menLevelThree";
 import { womenLevelThree } from "../../../data/category/level three/womenLevelThree";
-import {
-  electronics,
-  electronicsLevelThree,
-} from "../../../data/category/level three/electronicsLevelThree";
+import { electronicsLevelThree } from "../../../data/category/level three/electronicsLevelThree";
 import { furnitureLevelThree } from "../../../data/category/level three/furnitureLevelThree";
-import { Box } from "@mui/material";
 
 const categoryTwo = {
   men: menLevelTwo,
@@ -26,13 +23,38 @@ const categoryThree = {
   home_furniture: furnitureLevelThree,
 };
 
-const CategorySheet = () => {
+const CategorySheet = ({ selectedCategory, setShowSheet }) => {
+  const childCategory = (category, parentCategoryId) => {
+    return category.filter(
+      (child) => child.parentCategoryId === parentCategoryId
+    );
+  };
+
   return (
-    <Box className="bg-white shadow-lg lg:h-[500px] overflow-y-auto">
+    <Box
+      sx={{ zIndex: 2 }}
+      className="bg-white shadow-lg lg:h-[500px] overflow-y-auto"
+    >
       <div className="flex text-sm flex-wrap">
-        {categoryTwo["men"]?.map((item) => (
-          <div>
+        {categoryTwo[selectedCategory]?.map((item, index) => (
+          <div
+            className={`p-8 lg:w-[20%] ${
+              index % 2 === 0 ? "bg-slate-50" : "bg-white"
+            }`}
+          >
             <p className="text-custom mb-5 font-semibold">{item.name}</p>
+            <ul className="space-y-3">
+              {childCategory(
+                categoryThree[selectedCategory],
+                item.categoryId
+              ).map((item) => (
+                <div>
+                  <li className="hover:text-custom cursor-pointer">
+                    {item.name}
+                  </li>
+                </div>
+              ))}
+            </ul>
           </div>
         ))}
       </div>

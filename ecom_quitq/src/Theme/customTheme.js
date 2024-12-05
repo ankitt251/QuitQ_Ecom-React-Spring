@@ -9,6 +9,9 @@ const customTheme = createTheme({
     secondary: {
       main: "#FFF3E3",
     },
+    hoveredCol: {
+      main: "#825e0c",
+    },
   },
 });
 

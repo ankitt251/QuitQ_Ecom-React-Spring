@@ -27,7 +27,7 @@ const ReviewCard = () => {
             <div>
               <img
                 className="w-24 h-24 object-cover"
-                src="../imgs/prd1.jpg"
+                src="../imgs/prd12.jpg"
                 alt=""
               />
             </div>

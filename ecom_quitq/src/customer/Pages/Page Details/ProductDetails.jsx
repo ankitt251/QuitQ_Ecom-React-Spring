@@ -1,11 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import StarIcon from "@mui/icons-material/Star";
 import { Button, Divider } from "@mui/material";
 import {
   Add,
   AddShoppingCart,
-  FavoriteBorder,
-  FavoriteBorderOutlined,
   LocalShipping,
   Remove,
   Shield,
@@ -13,38 +11,63 @@ import {
   WorkspacePremium,
 } from "@mui/icons-material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import Review from "../Review/Review";
+
 import ReviewCard from "../Review/ReviewCard";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../State/Store";
+import { fetchProductById } from "../../../State/customer/ProductSlice";
 
 const ProductDetails = () => {
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
+  const dispatch = useAppDispatch();
+  const { productId } = useParams();
+  const { product } = useAppSelector((store) => store);
+  const [activeImage, setActiveImage] = useState(0);
+
+  const handleActiveImage = (value) => () => {
+    setActiveImage(value);
+  };
+
+  console.log(useParams()); // To log the parameters
+  useEffect(() => {
+    dispatch(fetchProductById(Number(productId))).then((response) => {
+      console.log("API Response:", response);
+    });
+  }, [productId]);
+  useEffect(() => {
+    console.log("Fetched Product:", product.product);
+
+    console.log("Selected Image URL:", product.product?.images[activeImage]);
+  }, [activeImage]);
 
   return (
-    <div className="px-5 lg:px-20 pt-10">
+    <div className="px-5 lg:px-20 pt-10 z-10">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
         <section className="flex flex-col lg:flex-row gap-5">
           <div className="w-full lg:w-[15%] flex flex-wrap lg:flex-col gap-3">
-            {[1, 1, 1, 1].map((item) => (
+            {product.product?.images.map((item, index) => (
               <img
+                onClick={handleActiveImage(index)}
                 className="lg:w-full w-[50px] cursor-pointer rounded-md"
-                src="../imgs/prd1.jpg"
-                alt=""
+                src={item}
+                alt={index}
               />
             ))}
           </div>
           <div className="w-full lg:w-[85%]">
             <img
               className="w-full rounded-md object-contain h-[550px]"
-              src="../imgs/prd1.jpg"
+              src={product.product?.images[activeImage]}
               alt=""
             />
           </div>
         </section>
         <section>
           <div className="flex items-center justify-between">
-            <h1 className="font-bold text-lg text-custom">H&M Clothing</h1>
+            <h1 className="font-bold text-lg text-custom">
+              {product.product?.seller?.businessDetails.businessName}
+            </h1>
             <FavoriteBorderIcon
               sx={{
                 color: "black",
@@ -56,7 +79,7 @@ const ProductDetails = () => {
             />
           </div>
           <p className="text-gray-500 font-semibold">
-            Flared fine-knit leggings
+            {product.product?.title}
           </p>
 
           <div className="flex justify-between items-center py-2 border w-[180px] px-3 mt-5">
@@ -72,9 +95,15 @@ const ProductDetails = () => {
           </div>
           <div>
             <div className="price flex items-center gap-3 mt-5 text-2xl">
-              <span className="font-sans text-gray-800">₹. 1,499</span>
-              <span className="line-through text-gray-400">₹. 1,999</span>
-              <span className="text-custom font-semibold">60%</span>
+              <span className="font-sans text-gray-800">
+                ₹. {product.product?.sellingPrice}
+              </span>
+              <span className="line-through text-gray-400">
+                ₹. {product.product?.mrpPrice}
+              </span>
+              <span className="text-custom font-semibold">
+                {product.product?.discountPercentage}%
+              </span>
             </div>
             <p className="text-sm">
               Inclusive of all taxes. Free Shipping above ₹1500.
@@ -153,10 +182,7 @@ const ProductDetails = () => {
             </Button>
           </div>
           <div className="mt-5 space-y-6">
-            <p>
-              Leggings in a soft, fine knit with a high, elasticated waist and
-              legs with flared hems.
-            </p>
+            <p>{product.product?.description}</p>
             <Divider />
           </div>
           <div className="mt-7 space-y-5">

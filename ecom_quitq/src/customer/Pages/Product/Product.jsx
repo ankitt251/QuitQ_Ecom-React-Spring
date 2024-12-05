@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ProductCard from "./ProductCard.jsx";
 import {
   Box,
@@ -20,13 +20,19 @@ import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import { FilterAlt } from "@mui/icons-material";
 import FilterSection from "./FilterSection.jsx";
 import Footer from "../../components/Footer/Footer.jsx";
+import { useAppDispatch, useAppSelector } from "../../../State/Store.js";
+import { useParams, useSearchParams } from "react-router-dom";
+import { fetchAllProducts } from "../../../State/customer/ProductSlice.js";
 
 const Product = () => {
   const theme = useTheme();
   const isLarge = useMediaQuery(theme.breakpoints.up("lg"));
   const [sort, setSort] = useState();
   const [page, setPage] = useState();
-
+  const dispatch = useAppDispatch();
+  const [searchParam, setSearchParams] = useSearchParams();
+  const { category } = useParams();
+  const { product } = useAppSelector((store) => store);
   const handleSortChange = (event) => {
     setSort(event.target.value);
   };
@@ -34,6 +40,25 @@ const Product = () => {
   const handlePageChange = (e) => {
     setPage(e);
   };
+
+  useEffect(() => {
+    const [minPrice, maxPrice] = searchParam.get("price")?.split("-") || [];
+    const color = searchParam.get("color");
+    const minDiscount = searchParam.get("discount")
+      ? Number(searchParam.get("discount"))
+      : undefined;
+    const pageNumber = page - 1 || 0;
+
+    const newFilter = {
+      color: color || "",
+      minPrice: minPrice ? Number(minPrice) : undefined,
+      maxPrice: maxPrice ? Number(maxPrice) : undefined,
+      minDiscount,
+      pageNumber,
+    };
+
+    dispatch(fetchAllProducts(newFilter));
+  }, [category, searchParam, page, dispatch]); // Add searchParam and page as dependencies
 
   return (
     <div className="-z-10 mt-10">
@@ -62,7 +87,7 @@ const Product = () => {
               )}
             </div>
             <FormControl size="small" sx={{ width: "200px" }}>
-              <InputLabel id="demo-simple-select-label">Age</InputLabel>
+              <InputLabel id="demo-simple-select-label">Sort</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
@@ -77,8 +102,8 @@ const Product = () => {
           </div>
           <Divider />
           <section className="products_section grid sm:grid-cols-2 ms:grid-cols-3 lg:grid-cols-4 gap-y-5 px-5 justify-center">
-            {[1, 1, 1, 1, 1, 1, 1, 1, 1].map((item) => (
-              <ProductCard />
+            {product.products.map((item) => (
+              <ProductCard item={item} />
             ))}
           </section>
           <div className="flex justify-center pt-10">
