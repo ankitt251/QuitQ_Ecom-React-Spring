@@ -13,7 +13,7 @@ export const fetchSellerProfile = createAsyncThunk(
       });
       console.log("fetch seller profile", response);
     } catch (error) {
-      console.log("error - - -", error);
+      console.log("error in seller profile- - -", error);
     }
   }
 );

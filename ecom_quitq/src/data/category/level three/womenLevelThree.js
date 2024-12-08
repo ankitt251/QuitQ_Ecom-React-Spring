@@ -126,6 +126,12 @@ export const womenLevelThree = [
     parentCategoryName: "Ethnic Wear",
     parentCategoryId: "women_ethnic_wear",
   },
+  {
+    name: "Kurtis",
+    categoryId: "women_kurti",
+    parentCategoryName: "Ethnic Wear",
+    parentCategoryId: "women_ethnic_wear",
+  },
 
   // Bottomwear
   {
@@ -189,6 +195,12 @@ export const womenLevelThree = [
     categoryId: "women_camisoles",
     parentCategoryName: "Innerwear & Sleepwear",
     parentCategoryId: "women_innerwear_sleepwear",
+  },
+  {
+    name: "Analog Watches",
+    categoryId: "women_watches",
+    parentCategoryName: "Watches",
+    parentCategoryId: "women_watches",
   },
 
   // Add more as needed...

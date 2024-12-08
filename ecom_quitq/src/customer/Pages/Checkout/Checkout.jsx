@@ -6,10 +6,14 @@ import {
   Radio,
   RadioGroup,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom"; // To handle redirection
 import AddressCard from "./AddressCard";
 import AddressForm from "./AddressForm";
 import PricingCard from "../Cart/PricingCard";
+import { fetchUserProfile } from "../../../State/customer/AuthSlice";
+import { createOrder } from "../../../State/customer/orderSlice"; // Import createOrder action
 
 const style = {
   position: "absolute",
@@ -38,14 +42,59 @@ const paymentMethod = [
 ];
 
 const Checkout = () => {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
   const [open, setOpen] = React.useState(false);
+  const [paymentGateway, setPaymentGateway] = useState("RAZORPAY");
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const navigate = useNavigate(); // To navigate to the success page
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [paymentGateway, setPaymentGateway] = useState("RAZORPAY");
 
   const handlePaymentChange = (e) => {
     setPaymentGateway(e.target.value);
+    console.log("Payment Gateway changed to:", e.target.value);
   };
+
+  const handleSelectAddress = (address) => {
+    setSelectedAddress(address);
+    console.log("Selected address:", address);
+  };
+
+  const handleBuyNow = () => {
+    if (!selectedAddress) {
+      alert("Please select an address before proceeding.");
+      return;
+    }
+
+    // If the selected payment gateway is Cash on Delivery
+    if (paymentGateway === "CASH ON DELIVERY") {
+      // Directly navigate to the Payment Success page
+      navigate("/payment-success/2");
+    } else if (paymentGateway === "RAZORPAY") {
+      // Dispatch createOrder with selected address and payment gateway
+      const jwt = localStorage.getItem("jwt"); // Get JWT token from localStorage
+      dispatch(
+        createOrder({ shippingAddress: selectedAddress, jwt, paymentGateway })
+      );
+      // Integrate Razorpay payment logic here (if needed)
+      alert("Payment through Razorpay initiated...");
+      navigate("/payment-success"); // After successful payment, redirect to the payment success page
+    }
+  };
+
+  useEffect(() => {
+    console.log("User from Redux:", user);
+
+    if (!user) {
+      const jwt = localStorage.getItem("jwt");
+      if (jwt) {
+        dispatch(fetchUserProfile({ jwt }));
+      }
+    }
+    console.log("User addresses in useEffect:", user?.address);
+  }, [dispatch, user]);
 
   return (
     <>
@@ -60,9 +109,18 @@ const Checkout = () => {
             <div className="text-xs font-medium space-y-5">
               <p>Saved Addresses</p>
               <div className="space-y-3">
-                {[1, 1, 1, 1].map((item) => (
-                  <AddressCard />
-                ))}
+                {user?.address && user.address.length > 0 ? (
+                  user.address.map((address) => (
+                    <AddressCard
+                      key={address.id}
+                      address={address}
+                      onSelect={() => handleSelectAddress(address)}
+                      isSelected={selectedAddress?.id === address.id}
+                    />
+                  ))
+                ) : (
+                  <p>No addresses found</p>
+                )}
               </div>
             </div>
 
@@ -88,13 +146,14 @@ const Checkout = () => {
                   >
                     {paymentMethod.map((item) => (
                       <FormControlLabel
+                        key={item.value}
                         className="border w-[45%] p-2 rounded-md flex justify-center"
                         value={item.value}
                         control={<Radio />}
                         label={
                           <img
                             className={`${
-                              item.value === "razorpay" ? "w-14" : ""
+                              item.value === "RAZORPAY" ? "w-14" : ""
                             } object-contain`}
                             src={item.image}
                             alt={item.label}
@@ -114,22 +173,20 @@ const Checkout = () => {
                     sx={{
                       color: "black",
                       py: "1rem",
-
                       backgroundColor: "white",
                       fontFamily: "serif",
                       border: "1px solid black",
                       "&:hover": {
-                        backgroundColor: "#f0f0f0", // Light gray on hover (optional)
-                        borderColor: "#B88E2F", // Change border color on hover (optional)
+                        backgroundColor: "#f0f0f0",
+                        borderColor: "#B88E2F",
                       },
                     }}
+                    onClick={handleBuyNow} // Call handleBuyNow on button click
                   >
                     Buy Now
                   </Button>
                 </div>
               </div>
-
-              <div></div>
             </div>
           </div>
         </div>
@@ -141,7 +198,7 @@ const Checkout = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <AddressForm />
+          <AddressForm paymentGateway={paymentGateway} />
         </Box>
       </Modal>
     </>

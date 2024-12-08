@@ -7,6 +7,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { useAppDispatch, useAppSelector } from "../../../State/Store";
+import { useEffect } from "react";
+import { fetchTransactionBySeller } from "../../../State/seller/transactionSlice";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -41,6 +44,14 @@ const rows = [
 ];
 
 export default function Transaction() {
+  const dispatch = useAppDispatch();
+  const { transactions } = useAppSelector((store) => store);
+
+  useEffect(() => {
+    const jwt = localStorage.getItem("jwt");
+    dispatch(fetchTransactionBySeller(jwt));
+  }, [dispatch]);
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -53,16 +64,24 @@ export default function Transaction() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.name}>
-              <StyledTableCell component="th" scope="row">
-                {row.name}
-              </StyledTableCell>
-              <StyledTableCell align="center">{row.calories}</StyledTableCell>
-              <StyledTableCell align="center">{row.fat}</StyledTableCell>
-              <StyledTableCell align="center">{row.carbs}</StyledTableCell>
-            </StyledTableRow>
-          ))}
+          {transactions.transactions &&
+            transactions.transactions.map((item) => (
+              <StyledTableRow key={item.id}>
+                <StyledTableCell component="th" scope="row">
+                  {item.date || "N/A"} {/* Handle missing 'date' */}
+                </StyledTableCell>
+                <StyledTableCell align="right" component="th" scope="row">
+                  {item.user?.email || "N/A"}{" "}
+                  {/* Use optional chaining for 'customer' */}
+                </StyledTableCell>
+                <StyledTableCell align="right">
+                  {item.order?.id || "N/A"}
+                </StyledTableCell>
+                <StyledTableCell align="right">
+                  {item.order?.totalSellingPrice || "N/A"}
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
         </TableBody>
       </Table>
     </TableContainer>

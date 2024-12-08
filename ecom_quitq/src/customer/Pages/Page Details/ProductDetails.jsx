@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import StarIcon from "@mui/icons-material/Star";
-import { Button, Divider } from "@mui/material";
+import { Button, Divider, Snackbar } from "@mui/material";
 import {
   Add,
   AddShoppingCart,
@@ -16,6 +16,7 @@ import ReviewCard from "../Review/ReviewCard";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../State/Store";
 import { fetchProductById } from "../../../State/customer/ProductSlice";
+import { addItemToCart } from "../../../State/customer/cartSlice";
 
 const ProductDetails = () => {
   const navigate = useNavigate();
@@ -24,20 +25,69 @@ const ProductDetails = () => {
   const { productId } = useParams();
   const { product } = useAppSelector((store) => store);
   const [activeImage, setActiveImage] = useState(0);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const handleActiveImage = (value) => () => {
     setActiveImage(value);
   };
 
-  console.log(useParams()); // To log the parameters
+  // Fetch product details
   useEffect(() => {
     dispatch(fetchProductById(Number(productId))).then((response) => {
       console.log("API Response:", response);
     });
   }, [productId]);
+
+  // Handle Add to Cart
+  const handleAddToCart = () => {
+    const jwt = localStorage.getItem("jwt");
+    const request = {
+      productId: product.product.id,
+      quantity: quantity, // This is dynamic
+    };
+
+    if (jwt) {
+      dispatch(addItemToCart({ jwt, request }))
+        .unwrap()
+        .then(() => {
+          setSnackbarMessage("Item added to cart successfully!");
+          setOpenSnackbar(true);
+        })
+        .catch(() => {
+          setSnackbarMessage("Failed to add item to cart.");
+          setOpenSnackbar(true);
+        });
+    } else {
+      alert("Please login to add items to the cart.");
+    }
+  };
+
+  // Handle Buy Now
+  const handleBuyNow = () => {
+    const jwt = localStorage.getItem("jwt");
+
+    if (jwt) {
+      const request = {
+        productId: product.product.id,
+        quantity: quantity,
+      };
+
+      dispatch(addItemToCart({ jwt, request }))
+        .unwrap()
+        .then(() => {
+          navigate("/checkout");
+        })
+        .catch(() => {
+          alert("Failed to add item to cart.");
+        });
+    } else {
+      alert("Please login to proceed with the purchase.");
+    }
+  };
+
   useEffect(() => {
     console.log("Fetched Product:", product.product);
-
     console.log("Selected Image URL:", product.product?.images[activeImage]);
   }, [activeImage]);
 
@@ -147,7 +197,7 @@ const ProductDetails = () => {
           <div className="mt-12 flex items-center gap-5">
             <Button
               fullWidth
-              onClick={() => navigate("/cart")}
+              onClick={handleAddToCart}
               sx={{
                 color: "black",
                 py: "1rem",
@@ -155,8 +205,8 @@ const ProductDetails = () => {
                 fontFamily: "serif",
                 border: "1px solid black",
                 "&:hover": {
-                  backgroundColor: "#f0f0f0", // Light gray on hover (optional)
-                  borderColor: "#B88E2F", // Change border color on hover (optional)
+                  backgroundColor: "#f0f0f0",
+                  borderColor: "#B88E2F",
                 },
               }}
               startIcon={<AddShoppingCart />}
@@ -165,7 +215,7 @@ const ProductDetails = () => {
             </Button>
             <Button
               fullWidth
-              onClick={() => navigate("/checkout")}
+              onClick={handleBuyNow}
               sx={{
                 color: "black",
                 py: "1rem",
@@ -173,8 +223,8 @@ const ProductDetails = () => {
                 fontFamily: "serif",
                 border: "1px solid black",
                 "&:hover": {
-                  backgroundColor: "#f0f0f0", // Light gray on hover (optional)
-                  borderColor: "#B88E2F", // Change border color on hover (optional)
+                  backgroundColor: "#f0f0f0",
+                  borderColor: "#B88E2F",
                 },
               }}
             >
@@ -191,6 +241,14 @@ const ProductDetails = () => {
           </div>
         </section>
       </div>
+
+      {/* Snackbar for success or failure */}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={() => setOpenSnackbar(false)}
+        message={snackbarMessage}
+      />
     </div>
   );
 };

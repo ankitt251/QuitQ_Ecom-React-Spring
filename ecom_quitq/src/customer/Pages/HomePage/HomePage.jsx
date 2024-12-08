@@ -2,12 +2,44 @@ import React from "react";
 import HomeSectionCarousel from "../../components/HomeSectionCarousel/HomeSectionCarousel";
 
 import Deal from "./Deal/Deal";
-import { Button, Divider } from "@mui/material";
+import { Button, Divider, Grid2, Typography } from "@mui/material";
 import { mens_kurta } from "../../../data/Men/mens_kurta";
 import Footer from "../../components/Footer/Footer";
 import { useNavigate } from "react-router-dom";
 import ElectricCategory from "./ElectricCategory/ElectricCategory";
 import ShopByCategory from "./ShopByCategory/ShopByCategory";
+import ProductCard from "./HomeProductCard/ProductCard";
+
+const sampleProducts = [
+  {
+    id: 1,
+    name: "Men's Kurta",
+    description: "Comfortable and stylish ethnic wear.",
+    price: 999,
+    image: "../imgs/prd1.webp", // Replace with actual image URL
+  },
+  {
+    id: 2,
+    name: "Electric Kettle",
+    description: "Boil water quickly and efficiently.",
+    price: 1499,
+    image: "../imgs/prdkettle.jpg", // Replace with actual image URL
+  },
+  {
+    id: 3,
+    name: "Smartphone",
+    description: "Latest model with all the modern features.",
+    price: 12999,
+    image: "../imgs/prdphone.webp", // Replace with actual image URL
+  },
+  {
+    id: 4,
+    name: "Wireless Earbuds",
+    description: "Experience superior sound quality.",
+    price: 1999,
+    image: "../imgs/prdear.webp", // Replace with actual image URL
+  },
+];
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -51,14 +83,26 @@ const HomePage = () => {
         <ElectricCategory />
       </div>
 
-      <div>
+      {/* <div>
         <Deal />
-      </div>
+      </div> */}
 
-      <div className="space-y-10 py-20 flex flex-col justify-center px-5 lg:px-10">
-        {/* <HomeSectionCarousel data={mens_kurta} /> */}
-        {/* <HomeSectionCarousel data={mens_kurta} /> */}
-        <ShopByCategory />
+      <div className="space-y-10 py-10 px-5">
+        <Typography
+          className="font-sans"
+          variant="h4"
+          align="center"
+          gutterBottom
+        >
+          Featured Products
+        </Typography>
+        <Grid2 justifyContent={"center"} container spacing={3}>
+          {sampleProducts.map((product) => (
+            <Grid2 item xs={12} sm={6} md={4} lg={3} key={product.id}>
+              <ProductCard product={product} />
+            </Grid2>
+          ))}
+        </Grid2>
       </div>
 
       <section className="relative h-[450px] lg:h-[550px]">
@@ -81,6 +125,7 @@ const HomePage = () => {
             {/* Button */}
             <div className="pt-6">
               <Button
+                onClick={() => navigate("/become-seller")}
                 variant="contained"
                 size="large"
                 sx={{

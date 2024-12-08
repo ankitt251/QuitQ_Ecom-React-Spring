@@ -1,29 +1,31 @@
-import { Radio } from "@mui/material";
 import React from "react";
+import { Box, Button } from "@mui/material";
 
-const AddressCard = () => {
-  const handleChange = (event) => {
-    console.log(event.target.checked);
-  };
-
+const AddressCard = ({ address, onSelect }) => {
   return (
-    <div className="p-5 border rounded-md flex">
-      <div>
-        <Radio
-          checked={true}
-          onChange={handleChange}
-          value=""
-          name="radio-button"
-        />
-      </div>
-      <div className="space-y-3 pt-3">
-        <h1>Ankit</h1>
-        <p className="w-[320px]"> Selene Park, 123 Main St, Pune, IND 12345</p>
+    <Box
+      className="space-y-3 p-4 border rounded-md cursor-pointer hover:border-primary"
+      onClick={() => onSelect(address)}
+    >
+      <div className="border p-4 rounded-md space-y-3">
+        <h3 className="font-semibold">{address.name}</h3>
+        <p>{address.streetAddress}</p>
         <p>
-          <strong>Mobile :</strong> 789456123
+          {address.city}, {address.state}
         </p>
+        <p>{address.country}</p>
+        <p>{address.zipCode}</p>
       </div>
-    </div>
+
+      <Button
+        variant="outlined"
+        fullWidth
+        size="small"
+        onClick={() => onSelect(address)}
+      >
+        Use this address
+      </Button>
+    </Box>
   );
 };
 

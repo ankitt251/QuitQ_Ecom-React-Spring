@@ -21,10 +21,11 @@ import { FilterAlt } from "@mui/icons-material";
 import FilterSection from "./FilterSection.jsx";
 import Footer from "../../components/Footer/Footer.jsx";
 import { useAppDispatch, useAppSelector } from "../../../State/Store.js";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { fetchAllProducts } from "../../../State/customer/ProductSlice.js";
 
 const Product = () => {
+  const navigate = useNavigate();
   const theme = useTheme();
   const isLarge = useMediaQuery(theme.breakpoints.up("lg"));
   const [sort, setSort] = useState();
@@ -33,6 +34,7 @@ const Product = () => {
   const [searchParam, setSearchParams] = useSearchParams();
   const { category } = useParams();
   const { product } = useAppSelector((store) => store);
+
   const handleSortChange = (event) => {
     setSort(event.target.value);
   };
@@ -40,6 +42,11 @@ const Product = () => {
   const handlePageChange = (e) => {
     setPage(e);
   };
+
+  // Dynamically set the page title based on the category
+  const categoryTitle = category
+    ? category.charAt(0).toUpperCase() + category.slice(1)
+    : "Products";
 
   useEffect(() => {
     const [minPrice, maxPrice] = searchParam.get("price")?.split("-") || [];
@@ -55,16 +62,17 @@ const Product = () => {
       maxPrice: maxPrice ? Number(maxPrice) : undefined,
       minDiscount,
       pageNumber,
+      sort, // Add the sort parameter
     };
 
     dispatch(fetchAllProducts(newFilter));
-  }, [category, searchParam, page, dispatch]); // Add searchParam and page as dependencies
+  }, [category, searchParam, page, sort, dispatch]); // Added 'sort' as a dependency
 
   return (
     <div className="-z-10 mt-10">
       <div>
         <h1 className="text-3xl text-center font-bold text-gray-700 pb-5 px-9 uppercase space-x-2">
-          Men T-Shirt
+          {categoryTitle} Products
         </h1>
       </div>
 

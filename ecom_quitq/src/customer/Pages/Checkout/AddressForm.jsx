@@ -2,6 +2,8 @@ import { Box, Button, Grid2, TextField } from "@mui/material";
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useAppDispatch } from "../../../State/Store";
+import { createOrder } from "../../../State/customer/orderSlice";
 
 const AddressFormSchema = Yup.object().shape({
   name: Yup.string()
@@ -16,11 +18,11 @@ const AddressFormSchema = Yup.object().shape({
       "Mobile number must be a valid 10-digit number starting with 6-9"
     ),
 
-  pinCode: Yup.string()
+  pincode: Yup.string()
     .required("Pin code is required")
     .matches(/^[1-9]{1}[0-9]{5}$/, "Pin code must be a valid 6-digit number"),
 
-  address: Yup.string()
+  streetAddress: Yup.string()
     .required("Address is required")
     .min(5, "Address must be at least 5 characters"),
 
@@ -40,20 +42,25 @@ const AddressFormSchema = Yup.object().shape({
     .max(50, "Locality cannot exceed 50 characters"),
 });
 
-const AddressForm = () => {
+const AddressForm = ({ paymentGateway }) => {
+  const dispatch = useAppDispatch();
   const formik = useFormik({
     initialValues: {
       name: "",
       mobile: "",
-      pinCode: "",
-      address: "",
+      pincode: "",
+      streetAddress: "",
       city: "",
       state: "",
       locality: "",
     },
     validationSchema: AddressFormSchema,
     onSubmit: (values) => {
+      const jwt = localStorage.getItem("jwt");
+      console.log(jwt);
+
       console.log(values);
+      dispatch(createOrder({ shippingAddress: values, jwt, paymentGateway }));
     },
   });
 
@@ -88,23 +95,28 @@ const AddressForm = () => {
             <Grid2 size={{ xs: 6 }}>
               <TextField
                 fullWidth
-                name="pinCode"
+                name="pincode"
                 label="Pin Code"
-                value={formik.values.pinCode}
+                value={formik.values.pincode}
                 onChange={formik.handleChange}
-                error={formik.touched.pinCode && Boolean(formik.errors.pinCode)}
-                helperText={formik.touched.pinCode && formik.errors.pinCode}
+                error={formik.touched.pincode && Boolean(formik.errors.pincode)}
+                helperText={formik.touched.pincode && formik.errors.pincode}
               />
             </Grid2>
             <Grid2 size={{ xs: 12 }}>
               <TextField
                 fullWidth
-                name="address"
+                name="streetAddress"
                 label="address"
-                value={formik.values.address}
+                value={formik.values.streetAddress}
                 onChange={formik.handleChange}
-                error={formik.touched.address && Boolean(formik.errors.address)}
-                helperText={formik.touched.address && formik.errors.address}
+                error={
+                  formik.touched.streetAddress &&
+                  Boolean(formik.errors.streetAddress)
+                }
+                helperText={
+                  formik.touched.streetAddress && formik.errors.streetAddress
+                }
               />
             </Grid2>
             <Grid2 size={{ xs: 12 }}>

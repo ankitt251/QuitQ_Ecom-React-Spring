@@ -61,3 +61,8 @@
   border-radius: 50%; /* Optional: Make the border rounded around the icon */
   padding: 5px; /* Add some padding to make the border visible around the heart */
 }
+
+.card-container {
+  position: relative;
+  cursor: pointer;
+}

@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import {
   AddShoppingCart,
   FavoriteBorder,
@@ -18,12 +17,14 @@ import {
 import { useNavigate } from "react-router-dom";
 import CategorySheet from "./CategorySheet";
 import { mainCategory } from "../../../data/category/mainCategory";
+import { useAppSelector } from "../../../State/Store";
 
 const Navigation = () => {
   const theme = useTheme();
   const isLarge = useMediaQuery(theme.breakpoints.up("lg"));
   const [selectedCategory, setSelectedCategory] = useState("men");
   const [showCategorySheet, setShowCategorySheet] = useState(false);
+  const { auth } = useAppSelector((store) => store);
 
   const navigate = useNavigate();
 
@@ -40,7 +41,7 @@ const Navigation = () => {
                 onClick={() => navigate("/")}
                 className="logo flex cursor-pointer text-lg md:text-2xl text-custom space-x-1"
               >
-                <img className=" w-8 h-8" src="../imgs/quitqlogo.png" alt="" />
+                <img className="w-8 h-8" src="../imgs/quitqlogo.png" alt="" />
                 <h1 className="space-y-0">QuitQ</h1>
               </div>
             </div>
@@ -54,12 +55,8 @@ const Navigation = () => {
                     setShowCategorySheet(true);
                     setSelectedCategory(item.categoryId);
                   }}
-                  //onClick={() => navigate("products/2")}
-                  className="mainCategory hover:text-custom
-                  hover:border-b-2 h-[70px] px-4 border-custom flex items-center
-                  "
+                  className="mainCategory hover:text-custom hover:border-b-2 h-[70px] px-4 border-custom flex items-center"
                 >
-                  {" "}
                   {item.name}
                 </li>
               ))}
@@ -67,16 +64,24 @@ const Navigation = () => {
           </div>
 
           <div className="flex gap-1 lg:gap-6 items-center">
-            <IconButton>
-              <SearchIcon />
-            </IconButton>
-            {false ? (
-              <Button className="flex items-center gap-2">
-                <Avatar
-                  sx={{ width: 29, height: 29 }}
-                  src="../imgs/catg_men.png"
-                />
-                <h1 className="font-semibold hidden lg:block">Ankit</h1>
+            {auth.isLoggedIn ? (
+              <Button
+                onClick={() => navigate("account/orders")}
+                className="flex items-center gap-2"
+              >
+                {auth.user ? (
+                  <>
+                    <Avatar
+                      sx={{ width: 29, height: 29 }}
+                      src="../imgs/catg_men.png"
+                    />
+                    <h1 className="font-semibold hidden lg:block">
+                      {auth.user?.fullName}
+                    </h1>
+                  </>
+                ) : (
+                  <span>Loading...</span>
+                )}
               </Button>
             ) : (
               <Button variant="contained" onClick={() => navigate("login")}>
@@ -84,15 +89,21 @@ const Navigation = () => {
               </Button>
             )}
             <IconButton>
-              <FavoriteBorder className="text-gray-700" sx={{ fontSize: 29 }} />
+              <FavoriteBorder
+                onClick={() => navigate("/wishlist")}
+                className="text-gray-700"
+                sx={{ fontSize: 29 }}
+              />
             </IconButton>
-            <IconButton>
+            <IconButton onClick={() => navigate("/cart")}>
               <AddShoppingCart
                 className="text-gray-700"
                 sx={{ fontSize: 29 }}
               />
             </IconButton>
-            {isLarge && (
+
+            {/* Conditionally render "Become a Seller" button */}
+            {!auth.isLoggedIn && isLarge && (
               <Button
                 onClick={() => navigate("become-seller")}
                 startIcon={<Storefront />}
@@ -108,8 +119,7 @@ const Navigation = () => {
           <div
             onMouseLeave={() => setShowCategorySheet(false)}
             onMouseEnter={() => setShowCategorySheet(true)}
-            className="z-20 categorySheet absolute top-[4.41rem] left-20 right-20
-        border "
+            className="z-20 categorySheet absolute top-[4.41rem] left-20 right-20 border"
           >
             <CategorySheet selectedCategory={selectedCategory} />
           </div>

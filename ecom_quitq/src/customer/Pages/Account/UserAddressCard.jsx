@@ -1,17 +1,26 @@
-import { Radio } from "@mui/material";
 import React from "react";
+import { Box } from "@mui/material";
 
-const UserAddressCard = () => {
+const UserAddressCard = ({
+  name,
+  streetAddress,
+  city,
+  state,
+  pincode,
+  mobile,
+}) => {
   return (
-    <div className="p-5 border rounded-md flex">
-      <div className="space-y-3 ">
-        <h1>Ankit Gorane</h1>
-        <p className="w-[320px]">Selene Park, Pune </p>
+    <Box className="p-5 border rounded-md flex">
+      <div className="space-y-3">
+        <h1>{name}</h1>
+        <p className="w-[320px]">
+          {streetAddress}, {city}, {state}, {pincode}
+        </p>
         <p>
-          <strong>Mobile :</strong>9874563210
+          <strong>Mobile :</strong> {mobile}
         </p>
       </div>
-    </div>
+    </Box>
   );
 };
 

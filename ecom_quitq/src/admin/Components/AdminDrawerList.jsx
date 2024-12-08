@@ -31,12 +31,6 @@ const menu = [
 
 const menu2 = [
   {
-    name: "Account",
-    path: "/seller/account",
-    icon: <AccountBox className="text-custom" />,
-    activeIcon: <AccountBox className="text-white" />,
-  },
-  {
     name: "Logout",
     path: "/",
     icon: <Logout className="text-custom" />,

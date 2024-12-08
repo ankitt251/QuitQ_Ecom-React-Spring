@@ -43,6 +43,7 @@ export const createProduct = createAsyncThunk(
 );
 
 const initialState = {
+  orders: [],
   products: [],
   loading: false,
   error: null,

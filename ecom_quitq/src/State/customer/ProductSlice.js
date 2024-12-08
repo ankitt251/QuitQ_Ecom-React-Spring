@@ -43,12 +43,15 @@ export const fetchAllProducts = createAsyncThunk(
   "products/fetchAllProducts",
   async (params, { rejectWithValue }) => {
     try {
+      // Include sort in the API request params
       const response = await api.get("http://localhost:8090/products", {
         params: {
           ...params,
           pageNumber: params.pageNumber || 0,
+          sort: params.sort || "", // Pass the sort value (e.g., 'price_low' or 'price_high')
         },
       });
+
       console.log("All product data:", response.data);
       return response.data;
     } catch (error) {

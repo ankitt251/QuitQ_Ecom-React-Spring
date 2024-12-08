@@ -1,6 +1,6 @@
 import React from "react";
 
-const DealCard = () => {
+const DealCard = ({ item }) => {
   return (
     <div className="w-[16rem] cursor-pointer">
       <img

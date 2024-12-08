@@ -77,6 +77,12 @@ export const menLevelThree = [
     parentCategoryId: "men_footwear",
   },
   {
+    name: "Running Shoes",
+    categoryId: "men_running_shoes",
+    parentCategoryName: "Footwear",
+    parentCategoryId: "men_footwear",
+  },
+  {
     name: "Sandals & Slippers",
     categoryId: "men_sandals_slippers",
     parentCategoryName: "Footwear",

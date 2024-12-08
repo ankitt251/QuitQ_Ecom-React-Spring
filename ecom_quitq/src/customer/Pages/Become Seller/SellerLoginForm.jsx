@@ -1,5 +1,5 @@
-import React from "react";
-import { Button, TextField } from "@mui/material";
+import React, { useState } from "react";
+import { Button, TextField, Snackbar } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
@@ -7,6 +7,9 @@ import { useNavigate } from "react-router-dom";
 
 const SellerLoginForm = () => {
   const navigate = useNavigate();
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
   // Formik setup with validation
   const formik = useFormik({
@@ -28,10 +31,15 @@ const SellerLoginForm = () => {
         );
         console.log("Server response: ", response.data); // Debugging
         localStorage.setItem("jwt", response.data.jwt);
-        alert(response.data.message);
+        setSnackbarMessage(response.data.message);
+        setSnackbarSeverity("success");
+        setOpenSnackbar(true);
         navigate("/seller");
       } catch (error) {
         console.error("Error response: ", error.response); // Debugging
+        setSnackbarMessage(error.response?.data?.message || "Login failed");
+        setSnackbarSeverity("error");
+        setOpenSnackbar(true);
         setFieldError("email", error.response?.data?.message || "Login failed");
       } finally {
         setSubmitting(false);
@@ -76,6 +84,15 @@ const SellerLoginForm = () => {
           {formik.isSubmitting ? "Logging in..." : "Login"}
         </Button>
       </form>
+
+      {/* Snackbar for success or failure */}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={() => setOpenSnackbar(false)}
+        message={snackbarMessage}
+        severity={snackbarSeverity}
+      />
     </div>
   );
 };

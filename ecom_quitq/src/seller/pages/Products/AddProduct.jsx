@@ -32,7 +32,8 @@ import { electronicsLevelTwo } from "../../../data/category/level two/electronic
 const AddProduct = () => {
   const [uploadImage, setUploadingImage] = useState(false);
   const [snackbarOpen, setOpenSnackbar] = useState(false);
-
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const dispatch = useAppDispatch();
   const { sellerProduct, seller } = useAppSelector((store) => store);
 
@@ -123,11 +124,17 @@ const AddProduct = () => {
   };
 
   useEffect(() => {
-    if (sellerProduct.productCreated || sellerProduct.error) {
+    if (sellerProduct.productCreated) {
+      setSnackbarMessage("Product added successfully!");
+      setSnackbarSeverity("success");
+      setOpenSnackbar(true);
+    }
+    if (sellerProduct.error) {
+      setSnackbarMessage("Error adding product. Please try again.");
+      setSnackbarSeverity("error");
       setOpenSnackbar(true);
     }
   }, [sellerProduct.productCreated, sellerProduct.error]);
-
   return (
     <div>
       <Box sx={{ maxWidth: "auto" }}>
@@ -461,24 +468,15 @@ const AddProduct = () => {
         </form>
       </Box>
 
-      <Box sx={{ width: 500 }}>
-        <Snackbar
-          open={snackbarOpen}
-          autoHideDuration={6000}
-          onClose={handleCloseSnackbar}
-        >
-          <Alert
-            onClose={handleCloseSnackbar}
-            severity={sellerProduct.error ? "error" : "success"}
-            variant="filled"
-            sx={{ width: "100%" }}
-          >
-            {sellerProduct.error
-              ? sellerProduct.error
-              : "Product created successfully"}
-          </Alert>
-        </Snackbar>
-      </Box>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

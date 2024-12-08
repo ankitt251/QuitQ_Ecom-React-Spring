@@ -17,6 +17,7 @@ import {
   DialogTitle,
 } from "@mui/material";
 
+// Setting up Axios Interceptors for JWT Token
 axios.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("jwt"); // Retrieve JWT token
@@ -41,6 +42,7 @@ const CreateCategory = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
+  // Fetching all categories
   const fetchCategories = async () => {
     try {
       const response = await axios.get("http://localhost:8090/api/category"); // Axios adds JWT token
@@ -56,25 +58,29 @@ const CreateCategory = () => {
 
   const handleInputChange = (index, field, value) => {
     const updatedCategories = [...categories];
-    updatedCategories[index][field] = value;
-    setCategories(updatedCategories);
-  };
-
-  const handleAddCategory = () => {
-    setCategories([
-      ...categories,
-      { name: "", parentCategory: null, categoryId: "", image: "" },
-    ]);
-  };
-
-  const handleRemoveCategory = (index) => {
-    const updatedCategories = categories.filter((_, i) => i !== index);
+    if (field === "parentCategory") {
+      // Fetch the full parent category object from allCategories
+      const parentCategory = allCategories.find((cat) => cat.id === value);
+      updatedCategories[index][field] = parentCategory || null; // Assign the full object
+    } else {
+      updatedCategories[index][field] = value;
+    }
     setCategories(updatedCategories);
   };
 
   const handleSubmit = async () => {
     try {
-      await axios.post("http://localhost:8090/api/category/create", categories); // Axios adds JWT token
+      const response = await axios.post(
+        "http://localhost:8090/api/category/create",
+        categories.map((cat) => ({
+          ...cat,
+          parentCategory: cat.parentCategory
+            ? { id: cat.parentCategory.id }
+            : null, // Ensure we send the ID of parent category
+        }))
+      );
+
+      // On success, show success message and reset the form
       setSuccessMessage("Categories created successfully!");
       setCategories([
         { name: "", parentCategory: null, categoryId: "", image: "" },
@@ -84,14 +90,30 @@ const CreateCategory = () => {
       console.error("Error creating categories:", err);
       setErrorMessage("Failed to create categories. Please try again.");
     } finally {
-      setOpenSnackbar(true);
+      setOpenSnackbar(true); // Show snackbar with the message
     }
   };
 
+  // Adding a new category entry
+  const handleAddCategory = () => {
+    setCategories([
+      ...categories,
+      { name: "", parentCategory: null, categoryId: "", image: "" },
+    ]);
+  };
+
+  // Removing a category entry
+  const handleRemoveCategory = (index) => {
+    const updatedCategories = categories.filter((_, i) => i !== index);
+    setCategories(updatedCategories);
+  };
+
+  // Handling closing of snackbar
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
   };
 
+  // Handling the dialog for adding a new parent category
   const handleAddParentCategory = async () => {
     if (!newParentCategory) return;
 
@@ -171,17 +193,19 @@ const CreateCategory = () => {
           )}
         </Box>
       ))}
-      <Button variant="contained" onClick={handleAddCategory}>
-        Add Another Category
-      </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        sx={{ mt: 2 }}
-        onClick={handleSubmit}
-      >
-        Submit Categories
-      </Button>
+      <div className="space-x-10">
+        <Button variant="outlined" onClick={handleAddCategory}>
+          Add Another Category
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ gap: 5 }}
+          onClick={handleSubmit}
+        >
+          Submit Categories
+        </Button>
+      </div>
       {/* Dialog for Adding New Parent Category */}
       <Dialog open={showDialog} onClose={() => setShowDialog(false)}>
         <DialogTitle>Add New Parent Category</DialogTitle>
